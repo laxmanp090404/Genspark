@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+
+# environment files
+.env
+.env.*
+server/.env
+server/.env.*
+client/.env
+client/.env.*
+
+# dotnet build output
+server/bin/
+server/obj/
+
+# common logs
+*.log
+
+# python cache
+__pycache__/
+*.pyc
+
+server/appsettings.*
+.DS_Store
