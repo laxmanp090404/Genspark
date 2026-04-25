@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { ApiService } from '../../core/api.service';
 import { BookingSummary } from '../../core/models';
 import { jsPDF } from 'jspdf';
@@ -84,8 +84,10 @@ import autoTable from 'jspdf-autotable';
                    Download Ticket
                 </button>
                 @if (canCancel(item)) {
-                  <button (click)="cancelTrip(item)" class="flex-1 rounded-lg bg-rose-900/40 border border-rose-800 px-4 py-2 text-xs font-semibold text-rose-300 hover:bg-rose-900/60">
-                    Cancel Trip
+                  <button (click)="cancelTrip(item)" 
+                    [disabled]="cancellingId() === item.bookingId"
+                    class="flex-1 rounded-lg bg-rose-900/40 border border-rose-800 px-4 py-2 text-xs font-semibold text-rose-300 hover:bg-rose-900/60 disabled:opacity-50 disabled:cursor-not-allowed">
+                    {{ cancellingId() === item.bookingId ? 'Cancelling...' : 'Cancel Trip' }}
                   </button>
                 }
               }
@@ -104,6 +106,7 @@ export class MyBookingsPageComponent implements OnInit {
   readonly bookings = signal<BookingSummary[]>([]);
   readonly activeTab = signal('Upcoming');
   readonly error = signal('');
+  readonly cancellingId = signal<string | null>(null);
 
   constructor(private readonly api: ApiService) {}
 
@@ -118,26 +121,23 @@ export class MyBookingsPageComponent implements OnInit {
     });
   }
 
-  filteredBookings() {
+  readonly filteredBookings = computed(() => {
     const now = new Date();
+    const currentTab = this.activeTab();
 
     return this.bookings().filter(b => {
-      // Create a date object for departure (YYYY-MM-DD + Time)
       const departureStr = `${b.travelDate}T${b.departureTime}`;
       const departure = new Date(departureStr);
       
-      if (this.activeTab() === 'Upcoming') {
-        // Upcoming = Not departed yet AND (Confirmed or Pending)
+      if (currentTab === 'Upcoming') {
         return departure > now && (b.status === 'CONFIRMED' || b.status === 'PENDING');
-      } else if (this.activeTab() === 'Completed') {
-        // Completed = Departed AND Confirmed
+      } else if (currentTab === 'Completed') {
         return departure <= now && b.status === 'CONFIRMED';
       } else {
-        // Cancelled = Any status with CANCELLED in it
         return b.status.includes('CANCELLED');
       }
     });
-  }
+  });
 
   canCancel(booking: BookingSummary): boolean {
     const departureStr = `${booking.travelDate}T${booking.departureTime}`;
@@ -151,12 +151,21 @@ export class MyBookingsPageComponent implements OnInit {
   cancelTrip(booking: BookingSummary) {
     const refundInfo = this.calculateRefundEstimate(booking);
     if (confirm(`Are you sure you want to cancel? Estimated refund (${refundInfo.status}): ₹${refundInfo.amount}`)) {
-      this.api.cancelBooking(booking.bookingId).subscribe({
-        next: () => {
-          this.loadBookings();
-        },
-        error: (err) => this.error.set(err?.error?.errors?.[0] ?? 'Failed to cancel booking.')
-      });
+      this.cancellingId.set(booking.bookingId);
+      
+      // Simulate 2 seconds of "cancelling" state as requested
+      setTimeout(() => {
+        this.api.cancelBooking(booking.bookingId).subscribe({
+          next: () => {
+            this.cancellingId.set(null);
+            this.loadBookings();
+          },
+          error: (err) => {
+            this.cancellingId.set(null);
+            this.error.set(err?.error?.errors?.[0] ?? 'Failed to cancel booking.');
+          }
+        });
+      }, 2000);
     }
   }
 
@@ -172,30 +181,74 @@ export class MyBookingsPageComponent implements OnInit {
   }
 
   downloadTicket(booking: BookingSummary) {
-    const doc = new jsPDF();
+    // Fetch full booking details including passengers
+    this.api.getBookingById(booking.bookingId).subscribe({
+      next: (res) => {
+        const detail = res.data;
+        const doc = new jsPDF();
 
-    doc.setFontSize(20);
-    doc.setTextColor(0, 150, 200);
-    doc.text('Bus Ticket', 14, 22);
+        // Header
+        doc.setFontSize(22);
+        doc.setTextColor(0, 150, 200);
+        doc.text('E-Ticket', 14, 22);
 
-    doc.setFontSize(12);
-    doc.setTextColor(50, 50, 50);
-    doc.text(`Booking ID: ${booking.bookingId}`, 14, 32);
-    doc.text(`Status: ${booking.status}`, 14, 40);
-    doc.text(`Route: ${booking.source} to ${booking.destination}`, 14, 48);
-    doc.text(`Travel Date: ${booking.travelDate}`, 14, 56);
+        // Metadata
+        doc.setFontSize(10);
+        doc.setTextColor(100, 100, 100);
+        doc.text(`Booking ID: ${detail.bookingId}`, 14, 30);
+        doc.text(`Date Issued: ${new Date().toLocaleString()}`, 14, 36);
 
-    autoTable(doc, {
-      startY: 64,
-      head: [['Detail', 'Value']],
-      body: [
-        ['Seats', booking.seatNumbers.join(', ')],
-        ['Total Amount', `INR ${booking.totalAmount}`]
-      ],
-      theme: 'grid',
-      headStyles: { fillColor: [0, 150, 200] }
+        // Journey Section
+        doc.setFontSize(14);
+        doc.setTextColor(0, 0, 0);
+        doc.text('Journey Details', 14, 48);
+
+        autoTable(doc, {
+          startY: 52,
+          body: [
+            ['Route', `${detail.source} to ${detail.destination}`],
+            ['Travel Date', detail.travelDate],
+            ['Time', `${detail.departureTime} - ${detail.arrivalTime}`],
+            ['Bus Registration', detail.registrationNumber],
+            ['Total Paid', `INR ${detail.totalAmount}`],
+            ['Status', detail.status]
+          ],
+          theme: 'striped',
+          styles: { fontSize: 10 }
+        });
+
+        // Passenger Section
+        const finalY = (doc as any).lastAutoTable.finalY;
+        doc.setFontSize(14);
+        doc.text('Passenger Details', 14, finalY + 15);
+
+        autoTable(doc, {
+          startY: finalY + 20,
+          head: [['Seat', 'Name', 'Age', 'Gender']],
+          body: detail.passengers.map((p: any) => [
+            p.seatNumber,
+            p.passengerName,
+            p.passengerAge,
+            p.passengerGender
+          ]),
+          headStyles: { fillColor: [0, 150, 200] },
+          theme: 'grid'
+        });
+
+        // Footer or Note if cancelled
+        if (detail.status.includes('CANCELLED')) {
+          const footerY = (doc as any).lastAutoTable.finalY;
+          doc.setFontSize(10);
+          doc.setTextColor(200, 0, 0);
+          doc.text(`* This booking is ${detail.status}. Refund: INR ${detail.refundAmount || 0}`, 14, footerY + 15);
+        }
+
+        doc.save(`Ticket_${detail.bookingId}.pdf`);
+      },
+      error: (err) => {
+        console.error('Failed to fetch booking details for ticket', err);
+        alert('Could not download ticket. Please try again later.');
+      }
     });
-
-    doc.save(`Ticket_${booking.bookingId}.pdf`);
   }
 }

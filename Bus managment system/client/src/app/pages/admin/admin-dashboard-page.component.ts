@@ -27,60 +27,52 @@ import { RouterLink } from '@angular/router';
         }
       </div>
 
-      <div class="mt-12">
-        <h2 class="text-xl font-bold text-white mb-4">All Buses</h2>
-        @if (busesLoading()) {
-          <p class="text-cyan-300">Loading buses...</p>
-        } @else {
-          <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900">
-            <table class="w-full text-left text-sm text-slate-300">
-              <thead class="border-b border-slate-800 bg-slate-950 text-xs uppercase text-slate-400">
-                <tr>
-                  <th class="px-4 py-3">Operator</th>
-                  <th class="px-4 py-3">Registration</th>
-                  <th class="px-4 py-3">Route</th>
-                  <th class="px-4 py-3">Timings</th>
-                  <th class="px-4 py-3">Price</th>
-                  <th class="px-4 py-3">Status</th>
-                  <th class="px-4 py-3">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (bus of buses(); track bus.busId) {
-                  <tr class="border-b border-slate-800 last:border-0 hover:bg-slate-800/50">
-                    <td class="px-4 py-3">{{ bus.operatorName }}</td>
-                    <td class="px-4 py-3 font-medium text-cyan-300">{{ bus.registrationNumber }}</td>
-                    <td class="px-4 py-3">{{ bus.source }} → {{ bus.destination }}</td>
-                    <td class="px-4 py-3">{{ bus.departureTime }} - {{ bus.arrivalTime }}</td>
-                    <td class="px-4 py-3">₹{{ bus.seatPrice }}</td>
-                    <td class="px-4 py-3">
-                      <span class="rounded px-2 py-0.5 text-xs"
-                        [ngClass]="{
-                          'bg-emerald-900/50 text-emerald-300': bus.status === 'ACTIVE',
-                          'bg-amber-900/50 text-amber-300': bus.status === 'OUT_OF_SERVICE',
-                          'bg-rose-900/50 text-rose-300': bus.status === 'DELETED'
-                        }">
-                        {{ bus.status }}
-                      </span>
-                    </td>
-                    <td class="px-4 py-3">
-                      @if (bus.scheduleId) {
-                        <a [routerLink]="['/book', bus.scheduleId]" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300">
-                          View Seats
-                        </a>
-                      } @else {
-                        <span class="text-xs text-slate-600 cursor-not-allowed" title="No schedule for today">
-                          No Schedule
-                        </span>
-                      }
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        }
+      <div class="mt-12 flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold text-white">All Buses</h2>
+        <a routerLink="/admin/bookings" class="text-sm font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
+          View All Bookings
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+        </a>
       </div>
+      @if (busesLoading()) {
+        <p class="text-cyan-300">Loading buses...</p>
+      } @else {
+        <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900">
+          <table class="w-full text-left text-sm text-slate-300">
+            <thead class="border-b border-slate-800 bg-slate-950 text-xs uppercase text-slate-400">
+              <tr>
+                <th class="px-4 py-3">Operator</th>
+                <th class="px-4 py-3">Registration</th>
+                <th class="px-4 py-3">Route</th>
+                <th class="px-4 py-3">Timings</th>
+                <th class="px-4 py-3">Price</th>
+                <th class="px-4 py-3">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (bus of buses(); track bus.busId) {
+                <tr class="border-b border-slate-800 last:border-0 hover:bg-slate-800/50">
+                  <td class="px-4 py-3">{{ bus.operatorName }}</td>
+                  <td class="px-4 py-3 font-medium text-cyan-300">{{ bus.registrationNumber }}</td>
+                  <td class="px-4 py-3">{{ bus.source }} → {{ bus.destination }}</td>
+                  <td class="px-4 py-3">{{ bus.departureTime }} - {{ bus.arrivalTime }}</td>
+                  <td class="px-4 py-3">₹{{ bus.seatPrice }}</td>
+                  <td class="px-4 py-3">
+                    <span class="rounded px-2 py-0.5 text-xs"
+                      [ngClass]="{
+                        'bg-emerald-900/50 text-emerald-300': bus.status === 'ACTIVE',
+                        'bg-amber-900/50 text-amber-300': bus.status === 'OUT_OF_SERVICE',
+                        'bg-rose-900/50 text-rose-300': bus.status === 'DELETED'
+                      }">
+                      {{ bus.status }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
     </section>
   `
 })

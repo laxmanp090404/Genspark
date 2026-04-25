@@ -28,7 +28,10 @@ public class BusesController(AppDbContext db, server.Services.IEmailService emai
             return BadRequest(ApiResponse<object>.Fail("Invalid travel date. Use yyyy-MM-dd."));
         }
 
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var now = DateTime.UtcNow;
+        var today = DateOnly.FromDateTime(now);
+        var currentTime = now.TimeOfDay;
+
         if (travelDate < today)
         {
             return BadRequest(ApiResponse<object>.Fail("Travel date cannot be in the past."));
@@ -41,6 +44,7 @@ public class BusesController(AppDbContext db, server.Services.IEmailService emai
             .Include(b => b.Route)
             .Include(b => b.Operator)
             .Where(b => b.Status == BusStatus.ACTIVE && b.Route.Status == RouteStatus.APPROVED)
+            .Where(b => travelDate > today || b.DepartureTime > currentTime)
             .ToListAsync(ct);
 
         var src = NormalizeSearchTerm(source);

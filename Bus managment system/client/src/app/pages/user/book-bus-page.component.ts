@@ -151,22 +151,22 @@ import autoTable from 'jspdf-autotable';
               
               <form [formGroup]="passengerForm" (ngSubmit)="submitPassengers()">
                 <div formArrayName="passengers" class="space-y-6">
-                  @for (passenger of passengers.controls; track i; let i = $index) {
-                    <div [formGroupName]="i" class="rounded-lg border border-slate-800 bg-slate-950 p-4">
-                      <h3 class="mb-3 font-medium text-cyan-300">Seat {{ selectedSeats()[i].seatNumber }}</h3>
+                  @for (passenger of passengers.controls; track $index) {
+                    <div [formGroupName]="$index" class="rounded-lg border border-slate-800 bg-slate-950 p-4">
+                      <h3 class="mb-3 font-medium text-cyan-300">Seat {{ selectedSeats()[$index].seatNumber }}</h3>
                       
                       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <label class="block">
                           <span class="mb-1 block text-sm text-slate-400">Name</span>
                           <input formControlName="passengerName" required 
                             class="w-full rounded border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none focus:border-cyan-500 transition-colors"
-                            [ngClass]="{'border-rose-500/50': passengers.at(i).get('passengerName')?.invalid && passengers.at(i).get('passengerName')?.touched}" />
+                            [ngClass]="{'border-rose-500/50': passengers.at($index).get('passengerName')?.invalid && passengers.at($index).get('passengerName')?.touched}" />
                         </label>
                         <label class="block">
                           <span class="mb-1 block text-sm text-slate-400">Age</span>
                           <input type="number" formControlName="passengerAge" required min="1" max="120"
                             class="w-full rounded border border-slate-700 bg-slate-900 px-3 py-2 text-slate-100 outline-none focus:border-cyan-500 transition-colors"
-                            [ngClass]="{'border-rose-500/50': passengers.at(i).get('passengerAge')?.invalid && passengers.at(i).get('passengerAge')?.touched}" />
+                            [ngClass]="{'border-rose-500/50': passengers.at($index).get('passengerAge')?.invalid && passengers.at($index).get('passengerAge')?.touched}" />
                         </label>
                         <label class="block">
                           <span class="mb-1 block text-sm text-slate-400">Gender</span>
@@ -517,6 +517,7 @@ export class BookBusPageComponent implements OnInit, OnDestroy {
         this.step.set('PASSENGERS');
         this.startTimer(300);
         this.freezing.set(false);
+        window.location.reload();
       },
       error: (err) => {
         const errorMsg = err?.error?.errors?.[0] ?? 'Failed to freeze seats.';
@@ -556,6 +557,7 @@ export class BookBusPageComponent implements OnInit, OnDestroy {
         isPrimary: [index === 0]
       }));
     });
+    this.passengerForm.updateValueAndValidity();
   }
 
   submitPassengers() {

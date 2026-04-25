@@ -100,6 +100,10 @@ export class ApiService {
     return this.http.get<ApiResponse<AdminSummary>>(`${this.base}/admin/summary`);
   }
 
+  getAllBookings() {
+    return this.http.get<ApiResponse<any[]>>(`${this.base}/admin/bookings`);
+  }
+
   getAdminRoutes(status = 'PENDING_APPROVAL', page = 1, pageSize = 20) {
     return this.http.get<ApiResponse<PagedResult<AdminRouteItem>>>(`${this.base}/admin/routes`, {
       params: { status, page, pageSize }
@@ -158,6 +162,10 @@ export class ApiService {
 
   cancelBooking(bookingId: string) {
     return this.http.delete<ApiResponse<any>>(`${this.base}/bookings/${bookingId}`);
+  }
+
+  getBookingById(bookingId: string) {
+    return this.http.get<ApiResponse<any>>(`${this.base}/bookings/${bookingId}`);
   }
 
   

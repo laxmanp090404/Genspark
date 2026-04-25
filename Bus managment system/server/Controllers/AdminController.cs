@@ -37,4 +37,40 @@ public class AdminController(AppDbContext db) : ControllerBase
 
         return Ok(ApiResponse<AdminSummaryResponse>.Ok(data));
     }
+
+    [HttpGet("bookings")]
+    public async Task<IActionResult> GetAllBookings(CancellationToken ct)
+    {
+        var bookings = await db.Bookings
+            .AsNoTracking()
+            .Include(b => b.User)
+            .Include(b => b.Schedule)
+            .ThenInclude(s => s.Bus)
+            .ThenInclude(b => b.Route)
+            .Include(b => b.BookingSeats)
+            .ThenInclude(bs => bs.Seat)
+            .OrderByDescending(b => b.CreatedAt)
+            .ToListAsync(ct);
+
+        var items = bookings.Select(b => new AdminBookingResponse
+        {
+            BookingId = b.BookingId,
+            ScheduleId = b.ScheduleId,
+            Status = b.Status.ToString(),
+            TravelDate = b.Schedule.TravelDate.ToString("yyyy-MM-dd"),
+            DepartureTime = b.Schedule.Bus.DepartureTime.ToString(),
+            RegistrationNumber = b.Schedule.Bus.RegistrationNumber,
+            Source = b.Schedule.Bus.Route.Source,
+            Destination = b.Schedule.Bus.Route.Destination,
+            TotalAmount = b.TotalAmount,
+            RefundStatus = b.RefundStatus.ToString(),
+            RefundAmount = b.RefundAmount,
+            SeatNumbers = b.BookingSeats.Select(bs => bs.Seat.SeatNumber).OrderBy(s => s).ToList(),
+            UserEmail = b.User.Email,
+            UserName = b.User.Username,
+            CreatedAt = b.CreatedAt
+        }).ToList();
+
+        return Ok(ApiResponse<List<AdminBookingResponse>>.Ok(items));
+    }
 }

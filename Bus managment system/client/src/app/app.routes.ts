@@ -15,6 +15,7 @@ import { AdminDashboardPageComponent } from './pages/admin/admin-dashboard-page.
 import { AdminRoutesPageComponent } from './pages/admin/admin-routes-page.component';
 import { AdminOperatorRequestsPageComponent } from './pages/admin/admin-operator-requests-page.component';
 import { AdminConfigPageComponent } from './pages/admin/admin-config-page.component';
+import { AdminBookingsPageComponent } from './pages/admin/admin-bookings-page.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
@@ -34,7 +35,8 @@ export const routes: Routes = [
       { path: 'admin/dashboard', component: AdminDashboardPageComponent, canActivate: [authGuard, roleGuard], data: { roles: ['ADMIN'] } },
       { path: 'admin/routes', component: AdminRoutesPageComponent, canActivate: [authGuard, roleGuard], data: { roles: ['ADMIN'] } },
       { path: 'admin/operator-requests', component: AdminOperatorRequestsPageComponent, canActivate: [authGuard, roleGuard], data: { roles: ['ADMIN'] } },
-      { path: 'admin/config', component: AdminConfigPageComponent, canActivate: [authGuard, roleGuard], data: { roles: ['ADMIN'] } }
+      { path: 'admin/config', component: AdminConfigPageComponent, canActivate: [authGuard, roleGuard], data: { roles: ['ADMIN'] } },
+      { path: 'admin/bookings', component: AdminBookingsPageComponent, canActivate: [authGuard, roleGuard], data: { roles: ['ADMIN'] } }
     ]
   },
   { path: '**', redirectTo: '' }
