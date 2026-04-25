@@ -200,6 +200,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<server.Hubs.SeatHub>("/hubs/seats");
+app.MapHub<server.Hubs.SeatHub>("api/hubs/seats");
 
 app.Run();

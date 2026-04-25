@@ -95,7 +95,7 @@ public class SeatsController(AppDbContext db, IHubContext<server.Hubs.SeatHub> h
         db.BookingSeats.AddRange(bookingSeats);
         await db.SaveChangesAsync(ct);
 
-        await hubContext.Clients.Group(schedule.ScheduleId.ToString()).SendAsync("SeatStatusChanged", ct);
+        await hubContext.Clients.Group(schedule.ScheduleId.ToString()).SendAsync("SeatStatusChanged", cancellationToken: ct);
 
         var response = new FreezeSeatsResponse
         {
@@ -146,7 +146,7 @@ public class SeatsController(AppDbContext db, IHubContext<server.Hubs.SeatHub> h
 
         await db.SaveChangesAsync(ct);
 
-        await hubContext.Clients.Group(booking.ScheduleId.ToString()).SendAsync("SeatStatusChanged", ct);
+        await hubContext.Clients.Group(booking.ScheduleId.ToString()).SendAsync("SeatStatusChanged", cancellationToken: ct);
 
         return Ok(ApiResponse<object>.Ok(null, "Seat freeze released."));
     }

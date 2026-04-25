@@ -64,9 +64,15 @@ import { RouterLink } from '@angular/router';
                       </span>
                     </td>
                     <td class="px-4 py-3">
-                      <a [routerLink]="['/book', bus.scheduleId]" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300">
-                        View Seats
-                      </a>
+                      @if (bus.scheduleId) {
+                        <a [routerLink]="['/book', bus.scheduleId]" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300">
+                          View Seats
+                        </a>
+                      } @else {
+                        <span class="text-xs text-slate-600 cursor-not-allowed" title="No schedule for today">
+                          No Schedule
+                        </span>
+                      }
                     </td>
                   </tr>
                 }

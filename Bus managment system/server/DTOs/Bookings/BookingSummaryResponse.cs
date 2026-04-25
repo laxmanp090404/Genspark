@@ -6,6 +6,8 @@ public class BookingSummaryResponse
     public Guid ScheduleId { get; set; }
     public string Status { get; set; } = string.Empty;
     public string TravelDate { get; set; } = string.Empty;
+    public string DepartureTime { get; set; } = string.Empty;
+    public string RegistrationNumber { get; set; } = string.Empty;
     public string Source { get; set; } = string.Empty;
     public string Destination { get; set; } = string.Empty;
     public decimal TotalAmount { get; set; }

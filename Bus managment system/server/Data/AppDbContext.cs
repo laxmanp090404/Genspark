@@ -265,7 +265,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(e => e.PassengerGender).HasColumnName("passenger_gender").HasConversion<string>();
             entity.Property(e => e.IsPrimary).HasColumnName("is_primary").HasDefaultValue(false);
 
-            entity.HasIndex(e => e.SeatId).IsUnique();
+            entity.HasIndex(e => e.SeatId);
 
             entity.HasOne(e => e.Booking)
                 .WithMany(b => b.BookingSeats)

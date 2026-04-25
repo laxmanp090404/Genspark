@@ -121,6 +121,8 @@ export interface BookingSummary {
   scheduleId: string;
   status: string;
   travelDate: string;
+  departureTime: string;
+  registrationNumber: string;
   source: string;
   destination: string;
   totalAmount: number;

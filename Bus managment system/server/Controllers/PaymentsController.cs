@@ -124,7 +124,7 @@ public class PaymentsController(AppDbContext db, server.Services.IEmailService e
             PaidAt = payment.PaidAt
         };
 
-        await hubContext.Clients.Group(booking.ScheduleId.ToString()).SendAsync("SeatStatusChanged", ct);
+        await hubContext.Clients.Group(booking.ScheduleId.ToString()).SendAsync("SeatStatusChanged", cancellationToken: ct);
 
         try
         {

@@ -43,7 +43,7 @@ public class EmailService(IConfiguration configuration) : IEmailService
         using var client = new SmtpClient();
         
         await client.ConnectAsync(host, port, SecureSocketOptions.StartTls, ct);
-        if (!string.IsNullOrWhiteSpace(username))
+        if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
         {
             await client.AuthenticateAsync(username, password, ct);
         }

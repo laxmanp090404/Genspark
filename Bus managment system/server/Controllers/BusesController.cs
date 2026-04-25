@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 using server.Data;
 using server.DTOs.Buses;
 using server.DTOs.Common;
@@ -11,7 +12,7 @@ namespace server.Controllers;
 
 [ApiController]
 [Route("api/buses")]
-public class BusesController(AppDbContext db, server.Services.IEmailService emailService) : ControllerBase
+public class BusesController(AppDbContext db, server.Services.IEmailService emailService, IHubContext<server.Hubs.SeatHub> hubContext) : ControllerBase
 {
     [HttpGet("search")]
     [AllowAnonymous]
@@ -235,26 +236,37 @@ public class BusesController(AppDbContext db, server.Services.IEmailService emai
     [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> GetAdminAll(CancellationToken ct)
     {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        
         var buses = await db.Buses
             .AsNoTracking()
             .Include(b => b.Route)
             .Include(b => b.Operator)
             .OrderByDescending(b => b.CreatedAt)
-            .Select(b => new 
-            {
-                BusId = b.BusId,
-                OperatorName = b.Operator.Username,
-                RegistrationNumber = b.RegistrationNumber,
-                Source = b.Route.Source,
-                Destination = b.Route.Destination,
-                DepartureTime = b.DepartureTime,
-                ArrivalTime = b.ArrivalTime,
-                SeatPrice = b.SeatPrice,
-                Status = b.Status.ToString()
-            })
             .ToListAsync(ct);
 
-        return Ok(ApiResponse<object>.Ok(buses));
+        var busIds = buses.Select(b => b.BusId).ToList();
+        var schedules = await db.BusSchedules
+            .Where(s => busIds.Contains(s.BusId) && s.TravelDate == today)
+            .ToListAsync(ct);
+
+        var scheduleMap = schedules.ToDictionary(s => s.BusId, s => s.ScheduleId);
+
+        var items = buses.Select(b => new 
+        {
+            BusId = b.BusId,
+            ScheduleId = scheduleMap.GetValueOrDefault(b.BusId),
+            OperatorName = b.Operator.Username,
+            RegistrationNumber = b.RegistrationNumber,
+            Source = b.Route.Source,
+            Destination = b.Route.Destination,
+            DepartureTime = b.DepartureTime,
+            ArrivalTime = b.ArrivalTime,
+            SeatPrice = b.SeatPrice,
+            Status = b.Status.ToString()
+        }).ToList();
+
+        return Ok(ApiResponse<object>.Ok(items));
     }
 
     [HttpPost]
@@ -347,34 +359,96 @@ public class BusesController(AppDbContext db, server.Services.IEmailService emai
         {
             var activeBookings = await db.Bookings
                 .Include(b => b.Payment)
+                .Include(b => b.BookingSeats)
+                .ThenInclude(bs => bs.Seat)
                 .Include(b => b.Schedule)
+                .ThenInclude(s => s.Bus)
+                .ThenInclude(b => b.Route)
                 .Where(b => b.Schedule.BusId == busId && b.Status == BookingStatus.CONFIRMED && b.Payment != null)
                 .ToListAsync(ct);
 
             foreach (var booking in activeBookings)
             {
+                var isCancelledByOperator = request.Status == BusStatus.OUT_OF_SERVICE;
+                
+                if (isCancelledByOperator)
+                {
+                    booking.Status = BookingStatus.CANCELLED_BY_SYSTEM;
+                    booking.RefundStatus = RefundStatus.FULL;
+                    booking.RefundAmount = booking.TotalAmount;
+                    booking.CancelledAt = DateTime.UtcNow;
+                    booking.UpdatedAt = DateTime.UtcNow;
+
+                    if (booking.Payment != null)
+                    {
+                        booking.Payment.Status = PaymentStatus.REFUNDED;
+                    }
+
+                    foreach (var seat in booking.BookingSeats.Select(bs => bs.Seat))
+                    {
+                        seat.Status = SeatStatus.AVAILABLE;
+                        seat.FreezeExpiresAt = null;
+                        seat.BookedByUserId = null;
+                    }
+                }
+
+                var passengersHtml = string.Join("", booking.BookingSeats.Select(bs => 
+                    $"<tr><td style='border: 1px solid #ccc; padding: 8px;'>{bs.Seat.SeatNumber}</td><td style='border: 1px solid #ccc; padding: 8px;'>{bs.PassengerName}</td><td style='border: 1px solid #ccc; padding: 8px;'>{bs.PassengerAge}</td><td style='border: 1px solid #ccc; padding: 8px;'>{bs.PassengerGender}</td></tr>"));
+
+                var subject = isCancelledByOperator ? "Bus Journey Cancelled - Refund Initiated" : "Bus Status Update - Bus Management System";
+                var title = isCancelledByOperator ? "Journey Cancelled" : "Bus Status Update";
+                var message = isCancelledByOperator 
+                    ? $"We regret to inform you that your journey on bus <strong>{bus.RegistrationNumber}</strong> has been cancelled by the operator due to the bus being taken out of service."
+                    : $"The status of your scheduled bus (<strong>{bus.RegistrationNumber}</strong>) has been updated to: <span style='color: #e67e22; font-weight: bold;'>{request.Status}</span>.";
+
                 var emailBody = $@"
                     <div style='font-family: sans-serif; color: #333;'>
-                        <h2>Bus Status Update</h2>
-                        <p>Dear {booking.Payment.PayerName},</p>
-                        <p>The status of your scheduled bus (<strong>{bus.RegistrationNumber}</strong>) has been updated to: <span style='color: #e67e22; font-weight: bold;'>{request.Status}</span>.</p>
+                        <h2 style='color: {(isCancelledByOperator ? "#c0392b" : "#2c3e50")};'>{title}</h2>
+                        <p>Dear {booking.Payment?.PayerName ?? "Valued Customer"},</p>
+                        <p>{message}</p>
                         
                         <h3>Journey Details</h3>
-                        <p><strong>Route:</strong> {booking.Schedule.Bus.Route.Source} to {booking.Schedule.Bus.Route.Destination}</p>
+                        <p><strong>Route:</strong> {booking.Schedule.Bus?.Route?.Source ?? "N/A"} to {booking.Schedule.Bus?.Route?.Destination ?? "N/A"}</p>
                         <p><strong>Date:</strong> {booking.Schedule.TravelDate:yyyy-MM-dd}</p>
-                        <p><strong>Departure:</strong> {booking.Schedule.Bus.DepartureTime}</p>
+                        <p><strong>Departure:</strong> {booking.Schedule.Bus?.DepartureTime.ToString() ?? "N/A"}</p>
+
+                        <h3>Passenger Details</h3>
+                        <table style='border-collapse: collapse; width: 100%; max-width: 600px;'>
+                            <thead>
+                                <tr style='background-color: #f8f9fa;'>
+                                    <th style='border: 1px solid #ccc; padding: 8px; text-align: left;'>Seat</th>
+                                    <th style='border: 1px solid #ccc; padding: 8px; text-align: left;'>Name</th>
+                                    <th style='border: 1px solid #ccc; padding: 8px; text-align: left;'>Age</th>
+                                    <th style='border: 1px solid #ccc; padding: 8px; text-align: left;'>Gender</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {passengersHtml}
+                            </tbody>
+                        </table>
+
+                        {(isCancelledByOperator ? $@"
+                        <h3>Refund Information</h3>
+                        <div style='background-color: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #c0392b;'>
+                            <p><strong>Refund Status:</strong> FULL</p>
+                            <p><strong>Refund Amount:</strong> ₹{booking.RefundAmount}</p>
+                            <p>The amount will be credited to your original payment method within 3-5 business days.</p>
+                        </div>" : "")}
                         
                         <p>If you have any questions, please contact our support team.</p>
                         <br/>
                         <p>Thank you for choosing Bus Management System.</p>
                     </div>";
 
-                await emailService.SendEmailAsync(booking.Payment.PayerEmail, booking.Payment.PayerName, "Bus Status Update - Bus Management System", emailBody, ct);
+                await emailService.SendEmailAsync(booking.Payment?.PayerEmail ?? "", booking.Payment?.PayerName ?? "Customer", subject, emailBody, ct);
             }
+
+            await db.SaveChangesAsync(ct);
+            await hubContext.Clients.All.SendAsync("SeatStatusChanged", cancellationToken: ct);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to send bus status update emails: {ex.Message}");
+            Console.WriteLine($"Failed to process bus status update: {ex.Message}");
         }
 
         return Ok(ApiResponse<object>.Ok(null, "Bus status updated."));
@@ -425,11 +499,11 @@ public class BusesController(AppDbContext db, server.Services.IEmailService emai
                 var emailBody = $@"
                     <div style='font-family: sans-serif; color: #333;'>
                         <h2 style='color: #c0392b;'>Bus Journey Cancelled</h2>
-                        <p>Dear {booking.Payment.PayerName},</p>
+                        <p>Dear {booking.Payment?.PayerName ?? "Valued Customer"},</p>
                         <p>We regret to inform you that your scheduled journey on bus <strong>{bus.RegistrationNumber}</strong> has been cancelled by the operator.</p>
                         
                         <h3>Journey Details</h3>
-                        <p><strong>Route:</strong> {booking.Schedule.Bus.Route.Source} to {booking.Schedule.Bus.Route.Destination}</p>
+                        <p><strong>Route:</strong> {booking.Schedule.Bus?.Route?.Source ?? "N/A"} to {booking.Schedule.Bus?.Route?.Destination ?? "N/A"}</p>
                         <p><strong>Date:</strong> {booking.Schedule.TravelDate:yyyy-MM-dd}</p>
                         
                         <div style='background-color: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #c0392b;'>
@@ -443,7 +517,7 @@ public class BusesController(AppDbContext db, server.Services.IEmailService emai
                         <p>We apologize for the inconvenience caused.</p>
                     </div>";
 
-                await emailService.SendEmailAsync(booking.Payment.PayerEmail, booking.Payment.PayerName, "URGENT: Bus Cancelled - Refund Initiated", emailBody, ct);
+                await emailService.SendEmailAsync(booking.Payment?.PayerEmail ?? "", booking.Payment?.PayerName ?? "Customer", "URGENT: Bus Cancelled - Refund Initiated", emailBody, ct);
             }
         }
         catch (Exception ex)

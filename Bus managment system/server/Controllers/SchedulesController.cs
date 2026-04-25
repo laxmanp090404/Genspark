@@ -28,6 +28,7 @@ public class SchedulesController(AppDbContext db) : ControllerBase
             .ThenInclude(b => b.Route)
             .Include(s => s.Seats)
             .ThenInclude(s => s.BookingSeats)
+            .ThenInclude(bs => bs.Booking)
             .FirstOrDefaultAsync(s => s.ScheduleId == scheduleId, ct);
 
         if (schedule is null)
@@ -45,8 +46,13 @@ public class SchedulesController(AppDbContext db) : ControllerBase
             .OrderBy(s => s.SeatNumber)
             .Select(s =>
             {
-                var bookingSeat = s.BookingSeats.FirstOrDefault();
-                var hasPassenger = s.Status == SeatStatus.BOOKED && bookingSeat is not null;
+                // Prioritize confirmed booking passenger info, then pending
+                var activeBookingSeat = s.BookingSeats
+                    .Where(bs => bs.Booking.Status == BookingStatus.CONFIRMED || bs.Booking.Status == BookingStatus.PENDING)
+                    .OrderByDescending(bs => bs.Booking.CreatedAt)
+                    .FirstOrDefault();
+
+                var hasPassenger = (s.Status == SeatStatus.BOOKED || s.Status == SeatStatus.FROZEN) && activeBookingSeat is not null;
 
                 return new SeatInfoResponse
                 {
@@ -54,9 +60,9 @@ public class SchedulesController(AppDbContext db) : ControllerBase
                     SeatCode = $"{bus.RegistrationNumber}-{s.SeatNumber}",
                     SeatNumber = s.SeatNumber,
                     Status = s.Status.ToString(),
-                    PassengerName = hasPassenger ? bookingSeat!.PassengerName : null,
-                    PassengerAge = hasPassenger ? bookingSeat!.PassengerAge : null,
-                    PassengerGender = hasPassenger ? bookingSeat!.PassengerGender.ToString() : null,
+                    PassengerName = hasPassenger ? activeBookingSeat!.PassengerName : null,
+                    PassengerAge = hasPassenger ? activeBookingSeat!.PassengerAge : null,
+                    PassengerGender = hasPassenger ? activeBookingSeat!.PassengerGender.ToString() : null,
                     IsFrozenByCurrentUser = s.Status == SeatStatus.FROZEN && s.BookedByUserId == currentUserId
                 };
             })

@@ -115,6 +115,8 @@ public class BookingsController(AppDbContext db, server.Services.IEmailService e
             ScheduleId = b.ScheduleId,
             Status = b.Status.ToString(),
             TravelDate = b.Schedule.TravelDate.ToString("yyyy-MM-dd"),
+            DepartureTime = b.Schedule.Bus.DepartureTime.ToString(),
+            RegistrationNumber = b.Schedule.Bus.RegistrationNumber,
             Source = b.Schedule.Bus.Route.Source,
             Destination = b.Schedule.Bus.Route.Destination,
             TotalAmount = b.TotalAmount,
@@ -248,23 +250,50 @@ public class BookingsController(AppDbContext db, server.Services.IEmailService e
 
         await db.SaveChangesAsync(ct);
 
-        await hubContext.Clients.Group(booking.ScheduleId.ToString()).SendAsync("SeatStatusChanged", ct);
+        await hubContext.Clients.Group(booking.ScheduleId.ToString()).SendAsync("SeatStatusChanged", cancellationToken: ct);
 
         if (booking.Payment is not null)
         {
             try
             {
+                var passengersHtml = string.Join("", booking.BookingSeats.Select(bs => 
+                    $"<tr><td style='border: 1px solid #ccc; padding: 8px;'>{bs.Seat.SeatNumber}</td><td style='border: 1px solid #ccc; padding: 8px;'>{bs.PassengerName}</td><td style='border: 1px solid #ccc; padding: 8px;'>{bs.PassengerAge}</td><td style='border: 1px solid #ccc; padding: 8px;'>{bs.PassengerGender}</td></tr>"));
+
                 var emailBody = $@"
                     <div style='font-family: sans-serif; color: #333;'>
-                        <h2>Booking Cancelled</h2>
+                        <h2 style='color: #c0392b;'>Booking Cancelled</h2>
                         <p>Dear {booking.Payment.PayerName},</p>
-                        <p>Your booking <strong>{booking.BookingId}</strong> has been cancelled.</p>
+                        <p>Your booking <strong>{booking.BookingId}</strong> has been successfully cancelled.</p>
                         
-                        <h3>Refund Details</h3>
-                        <p><strong>Refund Status:</strong> {refundStatus}</p>
-                        <p><strong>Refund Amount:</strong> ₹{refundAmount}</p>
+                        <h3>Journey Details</h3>
+                        <p><strong>Route:</strong> {booking.Schedule.Bus.Route.Source} to {booking.Schedule.Bus.Route.Destination}</p>
+                        <p><strong>Date:</strong> {booking.Schedule.TravelDate:yyyy-MM-dd}</p>
+                        <p><strong>Time:</strong> {booking.Schedule.Bus.DepartureTime} - {booking.Schedule.Bus.ArrivalTime}</p>
+
+                        <h3>Passenger Details</h3>
+                        <table style='border-collapse: collapse; width: 100%; max-width: 600px;'>
+                            <thead>
+                                <tr style='background-color: #f8f9fa;'>
+                                    <th style='border: 1px solid #ccc; padding: 8px; text-align: left;'>Seat</th>
+                                    <th style='border: 1px solid #ccc; padding: 8px; text-align: left;'>Name</th>
+                                    <th style='border: 1px solid #ccc; padding: 8px; text-align: left;'>Age</th>
+                                    <th style='border: 1px solid #ccc; padding: 8px; text-align: left;'>Gender</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {passengersHtml}
+                            </tbody>
+                        </table>
+
+                        <h3>Refund Information</h3>
+                        <div style='background-color: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #c0392b;'>
+                            <p><strong>Refund Status:</strong> {refundStatus}</p>
+                            <p><strong>Refund Amount:</strong> ₹{refundAmount}</p>
+                        </div>
+                        
+                        <p>If a refund is applicable, it will be credited to your original payment method within 3-5 business days.</p>
                         <br/>
-                        <p>Thank you for choosing Bus Management System.</p>
+                        <p>Thank you for using Bus Management System.</p>
                     </div>";
 
                 await emailService.SendEmailAsync(booking.Payment.PayerEmail, booking.Payment.PayerName, "Booking Cancelled - Bus Management System", emailBody, ct);
