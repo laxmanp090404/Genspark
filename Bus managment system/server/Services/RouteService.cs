@@ -25,10 +25,10 @@ public class RouteService(IRouteRepository routeRepo, IUserRepository userRepo) 
             throw new InvalidOperationException("Source and destination cannot be the same.");
         }
 
-        var exists = await routeRepo.ExistsAsync(ownerId, source, destination, ct);
+        var exists = await routeRepo.ExistsGlobalAsync(source, destination, null, ct);
         if (exists)
         {
-            throw new InvalidOperationException($"Route {source} -> {destination} already exists for this operator.");
+            throw new InvalidOperationException($"Route {source} -> {destination} already exists or is pending approval in the system. Approved routes are automatically available to all operators.");
         }
 
         var route = new Route
@@ -117,6 +117,22 @@ public class RouteService(IRouteRepository routeRepo, IUserRepository userRepo) 
         if (route.Status != RouteStatus.PENDING_APPROVAL)
         {
             throw new InvalidOperationException("Route is not in PENDING_APPROVAL state.");
+        }
+
+        // Check if an identical approved route already exists (excluding the current one)
+        var exists = await routeRepo.ExistsGlobalAsync(route.Source, route.Destination, routeId, ct);
+        if (exists)
+        {
+            // If another one exists, we just mark this one as REJECTED or duplicate?
+            // User said "not allow duplicate routes". 
+            // So if another one is already approved, this one is redundant.
+            route.Status = RouteStatus.REJECTED;
+            route.RejectionReason = "An identical route already exists in the system.";
+            route.ApprovedBy = adminId;
+            route.ApprovedAt = DateTime.UtcNow;
+            route.UpdatedAt = DateTime.UtcNow;
+            await routeRepo.UpdateAsync(route, ct);
+            throw new InvalidOperationException("An identical route already exists. This request has been automatically rejected.");
         }
 
         route.Status = RouteStatus.APPROVED;

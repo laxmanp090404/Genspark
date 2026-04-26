@@ -7,6 +7,7 @@ namespace server.Repositories.Interfaces;
 public interface IRouteRepository
 {
     Task<bool> ExistsAsync(Guid operatorId, string source, string destination, CancellationToken ct = default);
+    Task<bool> ExistsGlobalAsync(string source, string destination, Guid? excludeId = null, CancellationToken ct = default);
     Task AddAsync(Route route, CancellationToken ct = default);
     Task<Route?> GetByIdAsync(Guid routeId, CancellationToken ct = default);
     Task<Route?> GetByIdForOperatorAsync(Guid routeId, Guid operatorId, CancellationToken ct = default);

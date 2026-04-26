@@ -21,6 +21,19 @@ public class RouteRepository(AppDbContext db) : IRouteRepository
             ct);
     }
 
+    public Task<bool> ExistsGlobalAsync(string source, string destination, Guid? excludeId = null, CancellationToken ct = default)
+    {
+        var src = source.Trim().ToLower();
+        var dst = destination.Trim().ToLower();
+
+        return db.Routes.AnyAsync(
+            r => (excludeId == null || r.RouteId != excludeId) &&
+                 r.Source.ToLower() == src &&
+                 r.Destination.ToLower() == dst &&
+                 (r.Status == RouteStatus.APPROVED || r.Status == RouteStatus.PENDING_APPROVAL),
+            ct);
+    }
+
     public async Task AddAsync(Route route, CancellationToken ct = default)
     {
         await db.Routes.AddAsync(route, ct);
@@ -42,7 +55,7 @@ public class RouteRepository(AppDbContext db) : IRouteRepository
     {
         var query = db.Routes
             .Include(r => r.Buses)
-            .Where(r => r.OperatorId == operatorId)
+            .Where(r => r.OperatorId == operatorId || r.Status == RouteStatus.APPROVED)
             .AsQueryable();
 
         if (status is not null)
@@ -52,7 +65,8 @@ public class RouteRepository(AppDbContext db) : IRouteRepository
 
         var total = await query.CountAsync(ct);
         var items = await query
-            .OrderByDescending(r => r.CreatedAt)
+            .OrderByDescending(r => r.Status == RouteStatus.APPROVED) // Show approved routes first
+            .ThenByDescending(r => r.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(ct);
