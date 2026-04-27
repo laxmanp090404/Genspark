@@ -10,14 +10,23 @@ import { environment } from '../../../environments/environment';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
+import { BookingGuardModalComponent } from '../../shared/components/booking-guard-modal.component';
+
 @Component({
   selector: 'app-book-bus-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, BookingGuardModalComponent],
   template: `
     <section class="mx-auto max-w-5xl">
       <h1 class="text-2xl font-bold text-white">Book Bus</h1>
       <p class="mt-1 text-sm text-slate-400">Select your seats and passenger details.</p>
+
+      @if (showGuardModal()) {
+        <app-booking-guard-modal 
+          [mode]="guardMode()" 
+          (close)="showGuardModal.set(false)"
+        />
+      }
 
       @if (loading()) {
         <p class="mt-4 text-cyan-300">Loading schedule...</p>
@@ -310,6 +319,9 @@ export class BookBusPageComponent implements OnInit, OnDestroy {
   readonly bookingId = signal<string>('');
   readonly pricingInfo = signal<any>(null);
 
+  readonly showGuardModal = signal(false);
+  readonly guardMode = signal<'LOGIN' | 'ROLE_DENIED'>('LOGIN');
+
   private hubConnection?: signalR.HubConnection;
 
   private timerInterval: any;
@@ -352,6 +364,11 @@ export class BookBusPageComponent implements OnInit, OnDestroy {
     this.isReadOnly.set(
       this.auth.role() === 'ADMIN' || this.auth.role() === 'BUS_OPERATOR'
     );
+
+    if (!this.auth.isLoggedIn()) {
+      this.guardMode.set('LOGIN');
+      this.showGuardModal.set(true);
+    }
 
     this.route.paramMap.subscribe(params => {
       const id = params.get('scheduleId');
@@ -504,6 +521,12 @@ export class BookBusPageComponent implements OnInit, OnDestroy {
   }
 
   freezeSeats() {
+    if (this.auth.role() === 'ADMIN' || this.auth.role() === 'BUS_OPERATOR') {
+      this.guardMode.set('ROLE_DENIED');
+      this.showGuardModal.set(true);
+      return;
+    }
+
     if (!this.scheduleId() || this.selectedSeats().length === 0) return;
 
     this.freezing.set(true);
