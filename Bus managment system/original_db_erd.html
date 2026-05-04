@@ -1,0 +1,172 @@
+
+<style>
+#erd1 { overflow-x: auto; padding: 4px 0; }
+.erd-label { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); padding: 8px 0 4px; }
+</style>
+<div class="erd-label">Original schema — as implemented</div>
+<div id="erd1"></div>
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+await document.fonts.ready;
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'base',
+  fontFamily: '"Anthropic Sans", sans-serif',
+  themeVariables: {
+    darkMode: dark,
+    fontSize: '12px',
+    fontFamily: '"Anthropic Sans", sans-serif',
+    lineColor: dark ? '#9c9a92' : '#73726c',
+    textColor: dark ? '#c2c0b6' : '#3d3d3a',
+    primaryColor: dark ? '#1e1e2e' : '#eeedfe',
+    primaryBorderColor: dark ? '#534ab7' : '#7f77dd',
+    primaryTextColor: dark ? '#cecbf6' : '#26215c',
+    secondaryColor: dark ? '#1a1a2a' : '#e6f1fb',
+    secondaryBorderColor: dark ? '#185fa5' : '#378add',
+    tertiaryColor: dark ? '#1a2420' : '#e1f5ee',
+    tertiaryBorderColor: dark ? '#0f6e56' : '#1d9e75',
+  },
+});
+
+const src = `erDiagram
+  users {
+    uuid user_id PK
+    string username
+    string email
+    string password_hash
+    enum gender
+    int age
+    enum role
+    bool is_active
+    ts created_at
+    ts updated_at
+  }
+  platform_config {
+    uuid config_id PK
+    numeric platform_fee
+    uuid updated_by FK
+    ts updated_at
+  }
+  operator_switch_requests {
+    uuid request_id PK
+    uuid user_id FK
+    enum status
+    uuid reviewed_by FK
+    ts reviewed_at
+    ts created_at
+  }
+  routes {
+    uuid route_id PK
+    uuid operator_id FK
+    string source
+    string destination
+    enum status
+    uuid approved_by FK
+    ts approved_at
+    string rejection_reason
+    ts created_at
+    ts updated_at
+  }
+  buses {
+    uuid bus_id PK
+    uuid operator_id FK
+    uuid route_id FK
+    string reg_number
+    time departure_time
+    time arrival_time
+    numeric seat_price
+    enum status
+    ts created_at
+    ts updated_at
+  }
+  bus_schedules {
+    uuid schedule_id PK
+    uuid bus_id FK
+    date travel_date
+    ts created_at
+  }
+  seats {
+    uuid seat_id PK
+    uuid schedule_id FK
+    string seat_number
+    enum status
+    ts freeze_expires_at
+    uuid booked_by_user_id FK
+  }
+  bookings {
+    uuid booking_id PK
+    uuid user_id FK
+    uuid schedule_id FK
+    numeric total_amount
+    numeric platform_fee_snapshot
+    enum status
+    enum refund_status
+    numeric refund_amount
+    ts cancelled_at
+    ts created_at
+    ts updated_at
+  }
+  booking_seats {
+    uuid booking_seat_id PK
+    uuid booking_id FK
+    uuid seat_id FK
+    string passenger_name
+    int passenger_age
+    enum passenger_gender
+    bool is_primary
+  }
+  payments {
+    uuid payment_id PK
+    uuid booking_id FK
+    numeric amount
+    enum status
+    string payer_name
+    string payer_email
+    string transaction_ref
+    ts paid_at
+    ts created_at
+  }
+  notifications {
+    uuid notification_id PK
+    uuid recipient_user_id FK
+    string type
+    string subject
+    string body
+    ts sent_at
+    uuid related_booking_id FK
+  }
+
+  users ||--o{ operator_switch_requests : "requests"
+  users }o--o{ operator_switch_requests : "reviews"
+  users }o--|| platform_config : "last updated by"
+  users ||--o{ routes : "operates"
+  users }o--o{ routes : "approves"
+  users ||--o{ buses : "owns"
+  users ||--o{ bookings : "makes"
+  routes ||--o{ buses : "has"
+  buses ||--o{ bus_schedules : "runs on"
+  bus_schedules ||--o{ seats : "has"
+  bus_schedules ||--o{ bookings : "for"
+  bookings ||--o{ booking_seats : "contains"
+  seats ||--o{ booking_seats : "in"
+  bookings ||--o| payments : "paid via"
+  bookings ||--o{ notifications : "triggers"
+`;
+
+const { svg } = await mermaid.render('orig-svg', src);
+document.getElementById('erd1').innerHTML = svg;
+document.querySelectorAll('#erd1 svg .node').forEach(node => {
+  const fp = node.querySelector('path[d]');
+  if (!fp) return;
+  const nums = fp.getAttribute('d').match(/-?[\d.]+/g)?.map(Number);
+  if (!nums || nums.length < 8) return;
+  const xs = [nums[0],nums[2],nums[4],nums[6]], ys = [nums[1],nums[3],nums[5],nums[7]];
+  const x=Math.min(...xs),y=Math.min(...ys),w=Math.max(...xs)-x,h=Math.max(...ys)-y;
+  const r=document.createElementNS('http://www.w3.org/2000/svg','rect');
+  r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',w);r.setAttribute('height',h);r.setAttribute('rx','8');
+  for(const a of['fill','stroke','stroke-width','class','style'])if(fp.hasAttribute(a))r.setAttribute(a,fp.getAttribute(a));
+  fp.replaceWith(r);
+});
+document.querySelectorAll('#erd1 svg .row-rect-odd path,#erd1 svg .row-rect-even path').forEach(p=>p.setAttribute('stroke','none'));
+</script>

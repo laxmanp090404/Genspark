@@ -7,8 +7,11 @@
             Console.WriteLine("Hello, World!");
             
             TypesExample typesExample = new TypesExample();
-            typesExample.Run();
-            typesExample.showLimits();
+            // typesExample.Run();
+            // typesExample.showLimits();
+            // typesExample.StringInterpolation();
+
+            
         }
     }
 }

@@ -10,7 +10,7 @@ import { BookingGuardModalComponent } from '../../shared/components/booking-guar
 @Component({
   selector: 'app-search-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, BookingGuardModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, BookingGuardModalComponent],
   template: `
     <section>
       <h1 class="text-2xl font-bold text-white">Find your bus</h1>
