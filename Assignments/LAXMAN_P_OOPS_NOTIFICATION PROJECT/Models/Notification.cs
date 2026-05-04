@@ -10,8 +10,8 @@ namespace NotificationApp.Models
     internal class Notification
     {
         // properties of notification
-        public string Message { get; set; }
-        public DateTime Sentdate { get; set; }
+        public string Message { get; set; } = string.Empty;
+        public DateTime Sentdate { get; set; } = DateTime.Now;
         public User Recipient { get; set; }
         public NotificationType NotificationType { get; set; }
 
