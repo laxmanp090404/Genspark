@@ -1,10 +1,12 @@
-﻿namespace UnderstandingOops.Models
+﻿// partial class of account
+
+namespace UnderstandingOops.Models
 {
     public enum AccType
     {
-        SavingAccount =1,CurrentAccount=2
+        SavingAccount = 1, CurrentAccount = 2
     }
-    internal class Account
+    internal partial class Account
     {
 
         // c# props
@@ -17,8 +19,11 @@
         public string Phone { get; set; } = string.Empty;
 
         public decimal Balance { get; set; }
-                public AccType AccountType { get; set; }
+        public AccType AccountType { get; set; }
 
+
+
+       
 
         // defaut constructor
         public Account()
@@ -37,14 +42,8 @@
             Balance = balance;
         }
 
-        public override string ToString()
-        {
-            return $"Account Number : {AccountNumber}\nAccount Holder Name : {NameOnAccount}\nPhone Number : {Phone}\n" +
-                $"Email : {Email}\nBalance : ₹{Balance}";
-        }
-
 
     }
 
-    
+
 }
