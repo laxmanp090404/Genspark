@@ -1,21 +1,23 @@
+using System.Text.RegularExpressions;
 using UnderstandingOops.Interfaces;
 using UnderstandingOops.Models;
+using UnderstandingOops.Repositories;
 
 namespace UnderstandingOops.Services
 {
     internal class CustomerService : ICustomerInteract
     {
-        List<Account> accounts = new List<Account>();
-        static string lastAccountNumber = "9990001000";
+        // List<Account> accounts = new List<Account>();
+        // static string lastAccountNumber = "9990001000";
+        IRepository<string,Account> repo = new AccountRepository();
         public Account OpensAccount()
         {
-            Account account = TakeCustomerDetails();
-            TakeInitialDeposit(account);
-            long accNum = Convert.ToInt64(lastAccountNumber);
-            account.AccountNumber =  (++accNum).ToString();
-            lastAccountNumber = accNum.ToString();
-            accounts.Add(account);
-            return account;
+            try
+            {
+                
+            }
+            
+
         }
 
         private void TakeInitialDeposit(Account account)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using UnderstandingOops.Exceptions;
 using UnderstandingOops.Interfaces;
 using UnderstandingOops.Models;
 
@@ -23,6 +24,10 @@ namespace UnderstandingOops.Repositories
 
         public Account Create(Account item)
         {
+            if(item.Phone == "" || item.Phone.Length != 10)
+            {
+                throw new InvalidPhoneNumberException();
+            }
             long accNum = Convert.ToInt64(lastAccountNumber);
             item.AccountNumber = (++accNum).ToString();
             lastAccountNumber = accNum.ToString();
