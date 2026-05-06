@@ -1,6 +1,6 @@
 namespace NotificationApp.Models
 {
-    internal class User
+    internal partial class User
     {
         // user properties
         public int Id { get; set; }
@@ -24,9 +24,5 @@ namespace NotificationApp.Models
             Phone = phone;
         }
 
-        public override string ToString()
-        {
-            return $"Id: {Id}, Name: {Name}, Email: {Email}, Phone: {Phone}";
-        }
     }
 }
