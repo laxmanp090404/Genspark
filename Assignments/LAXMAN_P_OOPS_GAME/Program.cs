@@ -28,14 +28,14 @@ namespace GameApp
 
         static void Main(string[] args)
         {
-           
-                Console.BackgroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Welcome to word guessing Game !");
-                    Console.ResetColor();
+
+            Console.BackgroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Welcome to word guessing Game !");
+            Console.ResetColor();
             while (true)
             {
 
- Program program = new Program();
+                Program program = new Program();
 
 
                 program.Run();
