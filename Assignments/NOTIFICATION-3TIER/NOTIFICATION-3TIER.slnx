@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/NOTIFICATIONFE/">
+    <Project Path="NOTIFICATIONFE/NotificationApp.csproj" />
+  </Folder>
+  <Project Path="NOTIFICATIONBL/NOTIFICATIONBL.csproj" />
+  <Project Path="NOTIFICATIONDALL/NOTIFICATIONDALL.csproj" />
+  <Project Path="NOTIFICATIONMODELS/NOTIFICATIONMODELS.csproj" />
+</Solution>

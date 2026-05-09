@@ -1,0 +1,331 @@
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 6
+Do you want to view Users to enter their Id ?(Y/N):
+y 
+There are no users yet!
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 1
+Enter user name:
+Laxman P
+Enter email:
+laxman@         
+Enter phone:
+123456789
+You have entered an invalid user detail with Email is not of proper format
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: %                                                                             
+laxmanp@W4N00TW13C-laxmanp NOTIFICATIONFE % clear
+laxmanp@W4N00TW13C-laxmanp NOTIFICATIONFE % dotnet run
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 7
+No notifications sent yet
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 6
+Do you want to view Users to enter their Id ?(Y/N):
+y
+There are no users yet!
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 1
+Enter user name:
+Laxman P
+Enter email:
+laxman@
+You have entered an invalid user detail with Email is not of proper format
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 1
+Enter user name:
+Laxman P
+Enter email:
+laxman@gmail.com
+Enter phone:
++91323232323
+You have entered an invalid user detail with Country code not to be included
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 1
+Enter user name:
+Laxman P
+Enter email:
+laxman@gmail.com
+Enter phone:
+1234567890
+User Created Successfully : Id: 1, Name: Laxman P, Email: laxman@gmail.com, Phone: 1234567890
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 1
+Enter user name:
+Manju
+Enter email:
+manju@gmail.com
+Enter phone:
+9087654321
+User Created Successfully : Id: 2, Name: Manju, Email: manju@gmail.com, Phone: 9087654321
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 6
+Do you want to view Users to enter their Id ?(Y/N):
+y
+Id: 1 Name: Laxman P
+Id: 2 Name: Manju
+Please Enter user Id : 
+2
+Enter message:
+Hi              
+You have entered an invalid message with Message shorter than 5 characters
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 6
+Do you want to view Users to enter their Id ?(Y/N):
+n
+Please Enter user Id : 
+2
+Enter message:
+Hi to Manju to her mail
+Choose notification type: 1.Email 2.SMS
+1
+-------Sending Email-------
+To the user email : manju@gmail.com
+The content of mail is Hi to Manju to her mail
+Mail sent at 09/05/2026 10:02:43 PM
+Notification stored Successfully!
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 6
+Do you want to view Users to enter their Id ?(Y/N):
+y
+Id: 1 Name: Laxman P
+Id: 2 Name: Manju
+Please Enter user Id : 
+1
+Enter message:
+Hi to laxman from to his sms.
+Choose notification type: 1.Email 2.SMS
+2
+-------Sending SMS-------
+To the user number : 1234567890
+The message texted is Hi to laxman from to his sms.
+SMS sent at 09/05/2026 10:03:07 PM
+Notification stored Successfully!
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 7
+--------------------
+Type       : Email
+Message    : Hi to Manju to her mail
+Sent Date  : 09-05-2026 10:02 PM
+Recipient  : Manju
+Recipient ID : 2
+--------------------
+Type       : SMS
+Message    : Hi to laxman from to his sms.
+Sent Date  : 09-05-2026 10:03 PM
+Recipient  : Laxman P
+Recipient ID : 1
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 8
+Please enter Id of User whose notification you wish to see
+3
+No notifications for the user yet
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 8
+Please enter Id of User whose notification you wish to see
+2
+--------------------
+Type       : Email
+Message    : Hi to Manju to her mail
+Sent Date  : 09-05-2026 10:02 PM
+Recipient  : Manju
+Recipient ID : 2
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 6
+Do you want to view Users to enter their Id ?(Y/N):
+n
+Please Enter user Id : 
+1
+Enter message:
+I am entering message greater than 160 charsLorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis libero sollicitudin, consequat urna sit amet, lacinia magna. Curabitur vitae tincidunt.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis libero sollicitudin, consequat urna sit amet, lacinia magna. Curabitur vitae tincidunt.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis libero sollicitudin, consequat urna sit amet, lacinia magna. Curabitur vitae tincidunt.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis libero sollicitudin, consequat urna sit amet, lacinia magna. Curabitur vitae tincidunt.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis libero sollicitudin, consequat urna sit amet, lacinia magna. Curabitur vitae tincidunt.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis libero sollicitudin, consequat urna sit amet, lacinia magna. Curabitur vitae tincidunt.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent mollis libero sollicitudin, consequat urna sit amet, lacinia magna. Curabitur vitae tincidunt.
+Choose notification type: 1.Email 2.SMS
+2
+You have entered an invalid message with SMS too long
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 9
+
+
+
+laxmanp@W4N00TW13C-laxmanp NOTIFICATIONFE %    
