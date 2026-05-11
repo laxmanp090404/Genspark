@@ -1,5 +1,6 @@
 using NotificationDall.Interfaces;
 using NotificationModels.Models;
+using NotificationDall.Context;
 
 namespace NotificationDall.Repositories
 {
@@ -8,44 +9,28 @@ namespace NotificationDall.Repositories
     // also new repository can easily use the parent abstract class methods
     public abstract class AbstractRepository<K,T> : IRepository<K, T> where T :class where K:notnull
     {
-        // Dictinony to store userid : userdata value pairs
-        protected Dictionary<K,T> entitylist ;
+        // db context
+        protected DbContext context;
+        public AbstractRepository()
+        {
+            // initialising with dbcontext
+            context = new DbContext();
+        }
 
-        //create logic requires the key type 
-        // key type is ambiguous at this point hence abstracted
+        
+        // all methods are abstract as queries are ambigous at this stage
         public abstract T CreateEntity(T entity);
 
         // get all entities
-        public List<T>? GetAllEntity()
-        {
-            if(entitylist.Count == 0) return null;
-            return entitylist.Values.ToList();
-        }
+        public abstract List<T>? GetAllEntity();
 
         // get entity by id ie the key
         // return null if entity not found
-        public T? GetEntityById(K id)
-        {
-            if(!entitylist.ContainsKey(id)) return null;
-            else return entitylist[id];
-        }
+        public abstract T? GetEntityById(K id);
 
         // update entity by id
         // return null if entity not found or else return updated entity
-        public T? UpdateEntity(K id,T item)
-        {
-            if(!entitylist.ContainsKey(id)) return null;
-
-            entitylist[id] = item;
-            return entitylist[id];   
-        }
-        public T? DeleteEntity(K id)
-        {
-            if(!entitylist.ContainsKey(id)) return null;
-            T item = entitylist[id];
-            entitylist.Remove(id);
-            return item;
-        }
-
+        public abstract T? UpdateEntity(K id,T item);
+        public abstract T? DeleteEntity(K id);
     }
 }

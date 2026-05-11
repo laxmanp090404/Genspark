@@ -1,4 +1,4 @@
-# Notification System - 3 Tier Architecture
+# Notification System - 3 Tier Architecture -Updated with db integration
 
 ## Overview
 This project is a simple console-based notification system built using a 3-tier architecture.
@@ -11,12 +11,12 @@ This project is a simple console-based notification system built using a 3-tier 
 The application allows you to create users, view users, update and delete users, send email or SMS notifications, and view stored notifications.
 
 ## Some clarifications regarding my implementation wrt the task:
-- I have used the tier branching based on what Mam taught in the session.
-- Have modified the required Assignment project structure to include Validators/ Exceptions/ and also use of Partial class , Extension methods.
+- I have modified only the data access layer ie NOTIFICATIONDALL folder alone for this db integration.
+- Have implemented the db integration using the Datareader for Reading and ExecuteNonQuery for Create,Update and Delete operations.
 - Have provided detailed explanation of project structure and each file's functionility in next sections.
 - Sample output could be found on [Output file](output.txt)
 
-## Project Structure
+## Project Structure 
 
 ```text
 NOTIFICATION-3TIER/
@@ -34,6 +34,8 @@ NOTIFICATION-3TIER/
 │       ├── MessageValidator.cs
 │       └── UserDetailValidator.cs
 ├── NOTIFICATIONDALL/
+│   ├── Context/
+│   │   └── DbContext.cs
 │   ├── Interfaces/
 │   │   └── IRepository.cs
 │   └── Repositories/
@@ -69,9 +71,21 @@ NOTIFICATION-3TIER/
 - [NOTIFICATIONBL/NOTIFICATIONBL.csproj](NOTIFICATIONBL/NOTIFICATIONBL.csproj): Project file for the business logic layer.
 
 ### NOTIFICATIONDALL
+- [NOTIFICATIONDALL/Context/DbContext.cs](NOTIFICATIONDALL/Context/DbContext.cs):Manages PostgreSQL database connectivity using NpgsqlConnection .Provides a reusable database connection instance for repositories.
 - [NOTIFICATIONDALL/Interfaces/IRepository.cs](NOTIFICATIONDALL/Interfaces/IRepository.cs): Generic repository contract used by the data layer.
-- [NOTIFICATIONDALL/Repositories/AbstractRepository.cs](NOTIFICATIONDALL/Repositories/AbstractRepository.cs): Base repository class that implements common in-memory CRUD behavior.
-- [NOTIFICATIONDALL/Repositories/UserRepository.cs](NOTIFICATIONDALL/Repositories/UserRepository.cs): Stores and manages user data in memory.
+- [NOTIFICATIONDALL/Repositories/AbstractRepository.cs](NOTIFICATIONDALL/Repositories/AbstractRepository.cs): Abstract base repository implementing the generic repository interface. Initializes the database context and provides a common structure for concrete repositories.
+- [NOTIFICATIONDALL/Repositories/UserRepository.cs](NOTIFICATIONDALL/Repositories/UserRepository.cs):Handles database operations related to users:
+    - Create user
+    - Fetch all active users
+    - Fetch user by ID
+    - Update user details
+    - Soft delete users using isdeleted flag
+
+    - Uses:
+
+        - ExecuteScalar() for insert operations
+        - ExecuteNonQuery() for update/delete operations
+        - NpgsqlDataReader for fetching records
 - [NOTIFICATIONDALL/Repositories/NotificationRepository.cs](NOTIFICATIONDALL/Repositories/NotificationRepository.cs): Stores and manages notification data in memory.
 - [NOTIFICATIONDALL/NOTIFICATIONDALL.csproj](NOTIFICATIONDALL/NOTIFICATIONDALL.csproj): Project file for the data access layer.
 
