@@ -15,6 +15,7 @@ The application allows you to create users, view users, update and delete users,
 - Have implemented the db integration using the Datareader for Reading and ExecuteNonQuery for Create,Update and Delete operations.
 - Have provided detailed explanation of project structure and each file's functionility in next sections.
 - Sample output could be found on [Output file](output.txt)
+- SQL file for table creation and index is on [NotificationSystem.sql](/NOTIFICATIONDALL/NotificationSystem.sql)
 
 ## Project Structure 
 
@@ -34,6 +35,7 @@ NOTIFICATION-3TIER/
 │       ├── MessageValidator.cs
 │       └── UserDetailValidator.cs
 ├── NOTIFICATIONDALL/
+│   ├── NotificationSystem.sql
 │   ├── Context/
 │   │   └── DbContext.cs
 │   ├── Interfaces/
@@ -42,6 +44,7 @@ NOTIFICATION-3TIER/
 │       ├── AbstractRepository.cs
 │       ├── NotificationRepository.cs
 │       └── UserRepository.cs
+|       
 ├── NOTIFICATIONMODELS/
 │   ├── Exceptions/
 │   │   ├── InvalidMessageException.cs
@@ -71,6 +74,7 @@ NOTIFICATION-3TIER/
 - [NOTIFICATIONBL/NOTIFICATIONBL.csproj](NOTIFICATIONBL/NOTIFICATIONBL.csproj): Project file for the business logic layer.
 
 ### NOTIFICATIONDALL
+- [NOTIFICATIONDALL/NotificationSystem.sql](NOTIFICATIONDALL/NotificationSystem.sql) : Contains sql queries for creating tables and index for the notificationsystem.
 - [NOTIFICATIONDALL/Context/DbContext.cs](NOTIFICATIONDALL/Context/DbContext.cs):Manages PostgreSQL database connectivity using NpgsqlConnection .Provides a reusable database connection instance for repositories.
 - [NOTIFICATIONDALL/Interfaces/IRepository.cs](NOTIFICATIONDALL/Interfaces/IRepository.cs): Generic repository contract used by the data layer.
 - [NOTIFICATIONDALL/Repositories/AbstractRepository.cs](NOTIFICATIONDALL/Repositories/AbstractRepository.cs): Abstract base repository implementing the generic repository interface. Initializes the database context and provides a common structure for concrete repositories.
