@@ -1,0 +1,5 @@
+command for scaffolding using dotnet ef for db first approach
+dotnet ef dbcontext scaffold "connection-string" Npgsql.EntityFrameworkCore.PostgreSQL --output-dir Models
+
+Packages : Npgsql.EntityFrameworkCore.PostgreSQL
+            dotnet ef 
