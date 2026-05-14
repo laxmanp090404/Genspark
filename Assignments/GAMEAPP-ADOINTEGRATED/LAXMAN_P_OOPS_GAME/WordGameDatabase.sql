@@ -15,7 +15,7 @@ userid int constraint fk_gametouser references users(id) on delete restrict,
 iswon boolean not null,
 attemptsused int not null constraint chk_attempts check(attemptsused between 1 and 6),
 wordid int constraint fk_gametoword references hiddenwords(wordid) on delete restrict,
-createdat timestamp default current_timestamp,
+createdat timestamp default current_timestamp
 );
 
 create table guesses(
@@ -26,3 +26,21 @@ guess char(5) not null,
 attemptnumber int not null constraint chk_attemptnumber check(attemptnumber between 1 and 6),
 unique(gameid,attemptnumber)
 );
+
+alter table guesses
+add column feedback char(5) not null
+constraint chk_feedback
+check(feedback ~ '^[GYX]{5}$');
+
+alter table games
+add column score int default 0
+constraint chk_score check(score >= 0);
+
+insert into hiddenwords(word)
+values
+('APPLE'),
+('MANGO'),
+('GRAPE'),
+('TRAIN'),
+('PLANT'),
+('BRAIN');
