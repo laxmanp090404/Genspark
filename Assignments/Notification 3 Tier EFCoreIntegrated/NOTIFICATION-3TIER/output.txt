@@ -1,0 +1,162 @@
+laxmanp@W4N00TW13C-laxmanp NOTIFICATION-3TIER % dotnet run --project NOTIFICATIONFE
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 2
+
+All Users:
+Id: 2, Name: Manjubhashini, Email: manju@gmail.com, Phone: 9087654321
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 7
+--------------------
+Type       : Email
+Message    : hi laxman to his mail
+Sent Date  : 14-05-2026 06:32 PM
+Recipient  : Deleted User
+Recipient ID : 1
+--------------------
+Type       : SMS
+Message    : Hi manju to her sms
+Sent Date  : 14-05-2026 06:34 PM
+Recipient  : Manjubhashini
+Recipient ID : 2
+--------------------
+Type       : Email
+Message    : Hi manju to her mail
+Sent Date  : 14-05-2026 06:34 PM
+Recipient  : Manjubhashini
+Recipient ID : 2
+--------------------
+Type       : Email
+Message    : Hi ram to his mail
+Sent Date  : 14-05-2026 06:37 PM
+Recipient  : Deleted User
+Recipient ID : 3
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 1
+Enter user name:
+Sam
+Enter email:
+sam@gmail.com
+Enter phone:
+9080765432
+User Created Successfully : Id: 4, Name: Sam, Email: sam@gmail.com, Phone: 9080765432
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 4
+Enter user id to update:
+4
+Enter new name:
+Saman
+Enter new email:
+saman@gmail.com
+Enter new phone:
+9087564321
+User Updated Successfully:
+Id: 4, Name: Saman, Email: saman@gmail.com, Phone: 9087564321
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 8
+Please enter Id of User whose notification you wish to see
+y
+Please enter a valid Id
+3
+--------------------
+Type       : Email
+Message    : Hi ram to his mail
+Sent Date  : 14-05-2026 06:37 PM
+Recipient  : Deleted User
+Recipient ID : 3
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 6
+Do you want to view Users to enter their Id ?(Y/N):
+y
+Id: 2 Name: Manjubhashini
+Id: 4 Name: Saman
+Please Enter user Id : 
+4
+Enter message:
+hI SAMAN TO HIS MAIL
+Choose notification type: 1.Email 2.SMS
+1
+-------Sending Email-------
+To the user email : saman@gmail.com
+The content of mail is hI SAMAN TO HIS MAIL
+Mail sent at 14/05/2026 8:53:14 PM
+Notification stored Successfully!
+
+
+
+1. Create User
+2. Show All Users
+3. View User By ID
+4. Update User
+5. Delete User
+6. Send Notification
+7. View All Notifications
+8.View Notification for a particular User by his/her Id : 
+9. Exit
+Enter your choice: 9
+
+
+
+laxmanp@W4N00TW13C-laxmanp NOTIFICATION-3TIER % 
