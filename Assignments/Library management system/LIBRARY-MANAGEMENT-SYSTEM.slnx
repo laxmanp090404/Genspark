@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="LIBRARYBL/LIBRARYBL.csproj" />
+  <Project Path="LIBRARYDALL/LIBRARYDALL.csproj" />
+  <Project Path="LIBRARYFE/LIBRARYFE.csproj" />
+  <Project Path="LIBRARYMODELS/LIBRARYMODELS.csproj" />
+</Solution>

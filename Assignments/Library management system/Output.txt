@@ -1,0 +1,669 @@
+Welcome to Library Management System
+1.Member Management
+2.Book Management
+3.Borrow Book
+4.Return Book
+5.Fine Management
+6.Reports
+7.Exit
+Please enter your choice of service
+1
+
+Member management console
+
+1.Add Member
+2.View Members
+3.Search Member
+4.Deactive member
+5.Back
+Please enter your choice of service
+2
+Members in our Platform :
+
+3  :   Manju Membership Type: Student Email id : manju@gmail.com Activation status : Active
+
+2  :   laxman Membership Type: Premium Email id : laxman@gmail.com Activation status : Inactive
+
+5  :   Sam Membership Type: Premium Email id : sam@gmail.com Activation status : Active
+
+4  :   Ram Membership Type: Basic Email id : ram@gmail.com Activation status : Active
+
+
+Member management console
+
+1.Add Member
+2.View Members
+3.Search Member
+4.Deactive member
+5.Back
+Please enter your choice of service
+3
+Enter any details you know about member (Name / Email)
+laxman
+2  :   laxman : Premium Email id : laxman@gmail.com Activation status : Inactive
+
+Member management console
+
+1.Add Member
+2.View Members
+3.Search Member
+4.Deactive member
+5.Back
+Please enter your choice of service
+5
+
+Welcome to Library Management System
+1.Member Management
+2.Book Management
+3.Borrow Book
+4.Return Book
+5.Fine Management
+6.Reports
+7.Exit
+Please enter your choice of service
+2
+
+Book Management Console
+1.Browse Catalog
+2.Search Books
+3.Add Book
+4.Add Edition
+5.Add Copies
+6.Inventory Management
+7.Back
+Enter your choice
+1
+
+Book Id : 1
+Title : In Search of Lost Time
+Author : Marcel Proust
+Category : Fiction
+
+Editions:
+- Edition 1 first edition
+
+Available : 3
+Borrowed : 0
+Damaged : 0
+Lost : 1
+
+Book Id : 2
+Title : 5AM Club
+Author : Dan Brown
+Category : Non-Fiction
+
+Editions:
+- Edition 1 Special Edition
+
+Available : 1
+Borrowed : 1
+Damaged : 0
+Lost : 0
+
+Book Management Console
+1.Browse Catalog
+2.Search Books
+3.Add Book
+4.Add Edition
+5.Add Copies
+6.Inventory Management
+7.Back
+Enter your choice
+2
+
+Search Books
+1.By Title
+2.By Author
+3.By Category
+4.Smart Search (give anything you know (category/title/author))
+5.Back
+Enter choice
+1
+Please enter the title
+proust
+No books found
+
+Search Books
+1.By Title
+2.By Author
+3.By Category
+4.Smart Search (give anything you know (category/title/author))
+5.Back
+Enter choice
+4
+Please enter any detail you know about your book (Title/Category/Author)
+proust
+
+ Book Id :1
+Title : In Search of Lost Time
+Author : Marcel Proust
+Category : Fiction
+
+Search Books
+1.By Title
+2.By Author
+3.By Category
+4.Smart Search (give anything you know (category/title/author))
+5.Back
+Enter choice
+5
+
+Book Management Console
+1.Browse Catalog
+2.Search Books
+3.Add Book
+4.Add Edition
+5.Add Copies
+6.Inventory Management
+7.Back
+Enter your choice
+6
+
+Inventory Management
+1.View All Copies
+2.View Available Copies
+3.View Borrowed Copies
+4.View Damaged Copies
+5.View Lost Copies
+6.Back
+Enter your choice
+1
+
+All Copies
+
+Copy Id : 1
+Book : In Search of Lost Time
+Edition : 1
+Status : Available
+
+Copy Id : 2
+Book : In Search of Lost Time
+Edition : 1
+Status : Available
+
+Copy Id : 3
+Book : In Search of Lost Time
+Edition : 1
+Status : Available
+
+Copy Id : 4
+Book : In Search of Lost Time
+Edition : 1
+Status : Lost
+
+Copy Id : 5
+Book : 5AM Club
+Edition : 1
+Status : Available
+
+Copy Id : 6
+Book : 5AM Club
+Edition : 1
+Status : Borrowed
+
+Inventory Management
+1.View All Copies
+2.View Available Copies
+3.View Borrowed Copies
+4.View Damaged Copies
+5.View Lost Copies
+6.Back
+Enter your choice
+2
+
+Available Copies
+
+Copy Id : 3
+Book : In Search of Lost Time
+Edition : 1
+Status : Available
+
+Copy Id : 2
+Book : In Search of Lost Time
+Edition : 1
+Status : Available
+
+Copy Id : 1
+Book : In Search of Lost Time
+Edition : 1
+Status : Available
+
+Copy Id : 5
+Book : 5AM Club
+Edition : 1
+Status : Available
+
+Inventory Management
+1.View All Copies
+2.View Available Copies
+3.View Borrowed Copies
+4.View Damaged Copies
+5.View Lost Copies
+6.Back
+Enter your choice
+3
+
+Borrowed Copies
+
+Copy Id : 6
+Book : 5AM Club
+Edition : 1
+Status : Borrowed
+
+Inventory Management
+1.View All Copies
+2.View Available Copies
+3.View Borrowed Copies
+4.View Damaged Copies
+5.View Lost Copies
+6.Back
+Enter your choice
+4
+
+Damaged Copies
+No copies found
+
+Inventory Management
+1.View All Copies
+2.View Available Copies
+3.View Borrowed Copies
+4.View Damaged Copies
+5.View Lost Copies
+6.Back
+Enter your choice
+5
+
+Lost Copies
+
+Copy Id : 4
+Book : In Search of Lost Time
+Edition : 1
+Status : Lost
+
+Inventory Management
+1.View All Copies
+2.View Available Copies
+3.View Borrowed Copies
+4.View Damaged Copies
+5.View Lost Copies
+6.Back
+Enter your choice
+6
+
+Book Management Console
+1.Browse Catalog
+2.Search Books
+3.Add Book
+4.Add Edition
+5.Add Copies
+6.Inventory Management
+7.Back
+Enter your choice
+7
+
+Welcome to Library Management System
+1.Member Management
+2.Book Management
+3.Borrow Book
+4.Return Book
+5.Fine Management
+6.Reports
+7.Exit
+Please enter your choice of service
+3
+Enter the member id :
+5
+Don't know the book copy Id you want? Search for it (Y/N)
+y
+
+Inventory Management
+1.View All Copies
+2.View Available Copies
+3.View Borrowed Copies
+4.View Damaged Copies
+5.View Lost Copies
+6.Back
+Enter your choice
+1
+
+All Copies
+
+Copy Id : 1
+Book : In Search of Lost Time
+Edition : 1
+Status : Available
+
+Copy Id : 2
+Book : In Search of Lost Time
+Edition : 1
+Status : Available
+
+Copy Id : 3
+Book : In Search of Lost Time
+Edition : 1
+Status : Available
+
+Copy Id : 4
+Book : In Search of Lost Time
+Edition : 1
+Status : Lost
+
+Copy Id : 5
+Book : 5AM Club
+Edition : 1
+Status : Available
+
+Copy Id : 6
+Book : 5AM Club
+Edition : 1
+Status : Borrowed
+
+Inventory Management
+1.View All Copies
+2.View Available Copies
+3.View Borrowed Copies
+4.View Damaged Copies
+5.View Lost Copies
+6.Back
+Enter your choice
+6
+Enter the copy Id : 
+5
+Book borrowed successfully
+
+Welcome to Library Management System
+1.Member Management
+2.Book Management
+3.Borrow Book
+4.Return Book
+5.Fine Management
+6.Reports
+7.Exit
+Please enter your choice of service
+6
+
+Reports Console
+1.Currently Borrowed Books
+2.Overdue Borrowings
+3.Members With Pending Fines
+4.Most Borrowed Books
+5.Member Borrowing History
+6.Available Books By Category
+7.Back
+Enter your choice
+1
+
+Currently Borrowed Books
+
+Borrowing Id : 2
+Member : Manju
+Book : 5AM Club
+Borrowed On : 18/05/2026
+Due Date : 28/05/2026
+Status : Active
+
+Borrowing Id : 3
+Member : Sam
+Book : 5AM Club
+Borrowed On : 18/05/2026
+Due Date : 02/06/2026
+Status : Active
+
+Reports Console
+1.Currently Borrowed Books
+2.Overdue Borrowings
+3.Members With Pending Fines
+4.Most Borrowed Books
+5.Member Borrowing History
+6.Available Books By Category
+7.Back
+Enter your choice
+2
+
+Overdue Borrowings
+No records found
+
+Reports Console
+1.Currently Borrowed Books
+2.Overdue Borrowings
+3.Members With Pending Fines
+4.Most Borrowed Books
+5.Member Borrowing History
+6.Available Books By Category
+7.Back
+Enter your choice
+3
+
+Members With Pending Fines
+No members found
+
+Reports Console
+1.Currently Borrowed Books
+2.Overdue Borrowings
+3.Members With Pending Fines
+4.Most Borrowed Books
+5.Member Borrowing History
+6.Available Books By Category
+7.Back
+Enter your choice
+4
+
+Most Borrowed Books
+
+Book Id : 2
+Title : 5AM Club
+Author : Dan Brown
+Total Borrowings : 2
+
+Book Id : 1
+Title : In Search of Lost Time
+Author : Marcel Proust
+Total Borrowings : 1
+
+Reports Console
+1.Currently Borrowed Books
+2.Overdue Borrowings
+3.Members With Pending Fines
+4.Most Borrowed Books
+5.Member Borrowing History
+6.Available Books By Category
+7.Back
+Enter your choice
+5
+Enter member id : 
+3
+
+Borrowing History
+
+Borrowing Id : 1
+Member : Manju
+Book : In Search of Lost Time
+Borrowed On : 18/05/2026
+Due Date : 28/05/2026
+Status : Lost
+
+Borrowing Id : 2
+Member : Manju
+Book : 5AM Club
+Borrowed On : 18/05/2026
+Due Date : 28/05/2026
+Status : Active
+
+Reports Console
+1.Currently Borrowed Books
+2.Overdue Borrowings
+3.Members With Pending Fines
+4.Most Borrowed Books
+5.Member Borrowing History
+6.Available Books By Category
+7.Back
+Enter your choice
+6
+Enter category name : 
+fiction
+
+Available Books By Category
+
+Copy Id : 1
+Book : In Search of Lost Time
+Edition : 1
+Status : Available
+
+Copy Id : 2
+Book : In Search of Lost Time
+Edition : 1
+Status : Available
+
+Copy Id : 3
+Book : In Search of Lost Time
+Edition : 1
+Status : Available
+
+Reports Console
+1.Currently Borrowed Books
+2.Overdue Borrowings
+3.Members With Pending Fines
+4.Most Borrowed Books
+5.Member Borrowing History
+6.Available Books By Category
+7.Back
+Enter your choice
+7
+
+Welcome to Library Management System
+1.Member Management
+2.Book Management
+3.Borrow Book
+4.Return Book
+5.Fine Management
+6.Reports
+7.Exit
+Please enter your choice of service
+4
+Enter your member id to track your borrowings:
+3
+Need to view active borrowings? Y/N
+y
+
+Borrowing Id : 2
+Copy Id : 6 : 5AM Club
+Due date : 28/05/2026
+Enter borrowing id :
+2
+Return typse : 
+1.Normal
+2.Damaged Usable
+3.Damaged Unusable
+4.Lost
+Please enter return type id of your choice
+2
+Enter damage description :
+Slightly torn
+Book returned sucessfully
+
+Welcome to Library Management System
+1.Member Management
+2.Book Management
+3.Borrow Book
+4.Return Book
+5.Fine Management
+6.Reports
+7.Exit
+Please enter your choice of service
+5
+
+Fine Management Console
+1.View Pending Amount
+2.View Fine History
+3.Pay Fine
+4.Back
+Enter your choice
+3
+Need to view fines first? Y/N
+y
+Enter member id : 
+3
+
+Fine Id : 1
+Borrowing Id : 1
+Days Overdue : 1
+Fine Amount : ₹10.00
+Status : waived
+Waiver Reason : Student Membership Waiver offer
+
+Fine Id : 2
+Borrowing Id : 2
+Days Overdue : 1
+Fine Amount : ₹10
+Status : waived
+Waiver Reason : Student Membership Waiver offer
+Enter fine id : 
+2
+
+Payment Modes
+1.Cash
+2.UPI
+3.Card
+4.Online
+Select payment mode
+1
+Enter remarks (optional) : 
+
+Error occured Waived fines cannot be paid at LIBRARYBL
+
+Welcome to Library Management System
+1.Member Management
+2.Book Management
+3.Borrow Book
+4.Return Book
+5.Fine Management
+6.Reports
+7.Exit
+Please enter your choice of service
+5
+
+Fine Management Console
+1.View Pending Amount
+2.View Fine History
+3.Pay Fine
+4.Back
+Enter your choice
+2
+Enter member id : 
+3
+
+Fine Id : 1
+Borrowing Id : 1
+Days Overdue : 1
+Fine Amount : ₹10.00
+Status : waived
+Waiver Reason : Student Membership Waiver offer
+
+Fine Id : 2
+Borrowing Id : 2
+Days Overdue : 1
+Fine Amount : ₹10
+Status : waived
+Waiver Reason : Student Membership Waiver offer
+
+Fine Management Console
+1.View Pending Amount
+2.View Fine History
+3.Pay Fine
+4.Back
+Enter your choice
+4
+
+Welcome to Library Management System
+1.Member Management
+2.Book Management
+3.Borrow Book
+4.Return Book
+5.Fine Management
+6.Reports
+7.Exit
+Please enter your choice of service
+7
+Exiting app .......
+ See you soon
+laxmanp@W4N00TW13C-laxmanp Library management system % 

@@ -1,0 +1,14 @@
+dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL --version 10.0.1
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 10.0.4
+
+Scaffolding command:
+
+dotnet ef dbcontext scaffold \
+"Host=localhost;Port=5432;Database=LibraryManagementSystem;Username=laxmanp;" \
+Npgsql.EntityFrameworkCore.PostgreSQL \
+--project LIBRARYDALL \
+--startup-project LIBRARYFE \
+--context LibraryContext \
+--context-dir Context \
+--output-dir ../LIBRARYMODELS/Models \
+--force \
